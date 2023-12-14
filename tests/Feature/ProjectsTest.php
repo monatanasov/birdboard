@@ -17,12 +17,25 @@ class ProjectsTest extends TestCase
      * A basic feature test example.
      */
 
-    public function only_authenticated_users_can_create_projects()
+    public function test_guests_cannot_create_projects()
     {
 
         $attributes = Project::factory()->raw();
 
         $this->post('/projects', $attributes)->assertRedirect('login');
+    }
+
+
+    public function test_guests_cannot_view_projects()
+    {
+        $this->get('/projects')->assertRedirect('login');
+    }
+
+    public function test_guests_cannot_view_a_single_project()
+    {
+        $project = Project::factory()->create();
+
+        $this->get($project->path())->assertRedirect('login');
     }
 
 
@@ -46,19 +59,26 @@ class ProjectsTest extends TestCase
 
     }
     /** @TEST */
-    public function test_user_can_view_a_project()
+    public function test_user_can_view_their_project()
     {
+        $this->be(User::factory()->create());
+
         $this->withoutExceptionHandling();
 
-        $project = Project::factory()->create();
-//
-//        $response = $this->get($project->path());
-//
-//        dd($response);
+        $project = Project::factory()->create(['owner_id' => auth()->id()]);
 
         $this->get($project->path())
             ->assertSee($project->title)
             ->assertSee($project->description);
+    }
+
+    public function test_an_authenticated_user_cannot_view_the_projects_of_others()
+    {
+        $this->be(User::factory()->create());
+
+        $project = Project::factory()->create();
+
+        $this->get($project->path())->assertStatus(403);
     }
 
     /** @TEST */
