@@ -30,8 +30,23 @@ class ProjectsTest extends TestCase
         $this->assertDatabaseHas('projects', $attributes);
 
         $this->get('/projects')->assertSee($attributes['title']);
+
+    }
+    /** @TEST */
+    public function test_user_can_view_a_project()
+    {
+        $this->withoutExceptionHandling();
+
+//        $project = Project::factory('App\Project')->create();
+        $project = Project::factory()->create();
+
+        //$this->get('/projects/' . $project->id)
+        $this->get($project->path())
+            ->assertSee($project->title)
+            ->assertSee($project->description);
     }
 
+    /** @TEST */
     public function test_project_requires_a_title()
     {
         $attributes = Project::factory()->raw(['title' => '']);
@@ -39,6 +54,7 @@ class ProjectsTest extends TestCase
         $this->post('/projects', $attributes)->assertSessionHasErrors('title');
     }
 
+    /** @TEST */
     public function test_project_requires_a_description()
     {
         $attributes = Project::factory()->raw(['description' => '']);
