@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Project;
 
-class ProjectsTest extends TestCase
+class ManageProjectsTest extends TestCase
 {
     // AFTER THE TEST. RefreshDatabase resets back everything back ot its initial state
     use WithFaker, RefreshDatabase, HasFactory;
@@ -17,33 +17,25 @@ class ProjectsTest extends TestCase
      * A basic feature test example.
      */
 
-    public function test_guests_cannot_create_projects()
+    public function test_guests_cannot_manage_projects()
     {
 
-        $attributes = Project::factory()->raw();
-
-        $this->post('/projects', $attributes)->assertRedirect('login');
-    }
-
-
-    public function test_guests_cannot_view_projects()
-    {
-        $this->get('/projects')->assertRedirect('login');
-    }
-
-    public function test_guests_cannot_view_a_single_project()
-    {
+//        $attributes = Project::factory()->raw();
         $project = Project::factory()->create();
 
+        $this->get('/projects')->assertRedirect('login');
+        $this->get('/projects/create')->assertRedirect('login');
         $this->get($project->path())->assertRedirect('login');
+        $this->post('/projects', $project->toArray())->assertRedirect('login');
     }
-
 
     public function test_user_can_create_a_project()
     {
         $this->withoutExceptionHandling();
 
         $this->actingAs(User::factory()->create());
+
+        $this->get('/projects/create')->assertStatus(200);
 
         $attributes = [
             'title' => $this->faker->sentence,

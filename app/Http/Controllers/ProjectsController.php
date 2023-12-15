@@ -7,7 +7,7 @@ use App\Models\Project;
 
 class ProjectsController extends Controller
 {
-    public function index()
+    public function dashboard()
     {
         $projects = auth()->user()->projects;
 
@@ -20,8 +20,12 @@ class ProjectsController extends Controller
             abort(403);
         }
 
-
         return view('projects.show', compact('project'));
+    }
+
+    public function create(Project $project)
+    {
+        return view('projects.create');
     }
 
     public function store()
