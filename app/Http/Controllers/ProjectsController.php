@@ -7,7 +7,7 @@ use App\Models\Project;
 
 class ProjectsController extends Controller
 {
-    public function dashboard()
+    public function index()
     {
         $projects = auth()->user()->projects;
 
