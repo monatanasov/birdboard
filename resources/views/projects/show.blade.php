@@ -10,8 +10,17 @@
 
     @foreach($project->tasks as $task)
         <div class="card mb-3">
-            <input name="body" value="{{ $task->body }}">
+            <form method="POST" action="{{ $task->path() }}">
+                @method('PATCH')
+                @csrf
+
+                <input name="body" value="{{ $task->body }}" class="{{ $task->completed ? 'text-grey-500' : '' }}">
+                <input name="completed" type="checkbox" onchange="this.form.submit()" {{ $task->completed ? 'checked' : '' }}>
+            </form>
         </div>
+
+{{--        @dd($_POST);--}}
+
     @endforeach
         <div class="card mb-3">
             <form method="POST" action="{{ $project->path() . '/tasks' }}">

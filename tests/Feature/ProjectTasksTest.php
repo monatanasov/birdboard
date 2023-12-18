@@ -6,7 +6,6 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-//use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class ProjectTasksTest extends TestCase
@@ -20,11 +19,27 @@ class ProjectTasksTest extends TestCase
 
         $project = Project::factory()->create();
 
-        $this->post($project->path() . '/tasks', ['body' => 'test Task']);
-//            ->assertStatus(403);
+        $this->post($project->path() . '/tasks', ['body' => 'test Task'])
+            ->assertStatus(403);
 
         $this->assertDatabaseMissing('tasks', ['body' => 'test Task']);
     }
+
+    public function test_only_the_owner_of_a_project_may_update_tasks()
+    {
+
+        $this->signIn();
+
+        $project = Project::factory()->create();
+
+        $task = $project->addTask('test Task');
+
+        $this->patch($task->path(), ['body' => 'changed'])
+            ->assertStatus(403);
+
+        $this->assertDatabaseMissing('tasks', ['body' => 'changed']);
+    }
+
 
     public function test_project_can_have_tasks()
     {
@@ -34,7 +49,7 @@ class ProjectTasksTest extends TestCase
 
         $project = Project::factory()->create(['owner_id' => auth()->id()]);
 
-        $task = $this->post($project->path() . '/tasks', ['body' => 'test Task']);
+        $this->post($project->path() . '/tasks', ['body' => 'test Task']);
 
         $this->get($project->path())
             ->assertSee('test Task');
