@@ -27,8 +27,6 @@ class ProjectTasksTest extends TestCase
 
     public function test_only_the_owner_of_a_project_may_update_tasks()
     {
-        $this->withoutExceptionHandling();
-
         $this->signIn();
 
         $project = Project::factory()->create();
@@ -68,6 +66,8 @@ class ProjectTasksTest extends TestCase
             'body' => 'changed',
             'completed' => true
         ]);
+
+//        dd($project->path() . '/tasks/' . $task->id);
 
         $this->assertDatabaseHas('tasks', [
             'body' => 'changed',
