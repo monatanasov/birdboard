@@ -30,5 +30,11 @@
             </form>
         </div>
 
+    <div>
+        <h2 class="">General Notes</h2>
+
+        <textarea class="" style="min-height: 200px">{{ $project->notes }}</textarea>
+    </div>
+
 </body>
 </html>

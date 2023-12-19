@@ -27,6 +27,7 @@ class ProjectTasksTest extends TestCase
 
     public function test_only_the_owner_of_a_project_may_update_tasks()
     {
+        $this->withoutExceptionHandling();
 
         $this->signIn();
 
@@ -57,8 +58,6 @@ class ProjectTasksTest extends TestCase
 
     public function test_task_can_be_updated()
     {
-        $this->withoutExceptionHandling();
-
         $this->signIn();
 
         $project = Project::factory()->create(['owner_id' => auth()->id()]);

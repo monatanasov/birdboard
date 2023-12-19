@@ -16,9 +16,11 @@ class ProjectsController extends Controller
 
     public function show(Project $project)
     {
-        if (auth()->user()->isNot($project->owner)) {
-            abort(403);
-        }
+        $this->authorize('update', $project);
+
+//        if (auth()->user()->isNot($project->owner)) {
+//            abort(403);
+//        }
 
         return view('projects.show', compact('project'));
     }
@@ -33,7 +35,8 @@ class ProjectsController extends Controller
         // validate
         $attributes = request()->validate([
             'title' => 'required',
-            'description' => 'required'
+            'description' => 'required',
+            'notes' => 'min:3'
         ]);
 
         // if auth user - assign owner id; else - redirect to login
