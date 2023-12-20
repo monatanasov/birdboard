@@ -31,6 +31,7 @@ class ManageProjectsTest extends TestCase
 
     public function test_user_can_create_a_project()
     {
+        $this->withoutExceptionHandling();
         $this->signIn();
 
         $this->get('/projects/create')->assertStatus(200);
@@ -41,14 +42,18 @@ class ManageProjectsTest extends TestCase
             'notes' => 'General notes here.'
         ];
 
-        $this->post('/projects', $attributes)->assertRedirect('/projects');
 
-        // when writing a test that will change or manipulate the db --> use RefreshDatabase
-        $this->assertDatabaseHas('projects', $attributes);
+        $response = $this->post('/projects', $attributes);
 
-        $this->get('/projects')
-            ->assertSee($attributes['title']);
 
+        $project = Project::where($attributes)->first();
+
+        $response->assertRedirect($project->path());
+
+        $this->get($project->path())
+            ->assertSee($attributes['title'])
+            ->assertSee($attributes['description'])
+            ->assertSee($attributes['notes']);
     }
     /** @TEST */
     public function test_user_can_view_their_project()
