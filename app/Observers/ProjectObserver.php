@@ -12,7 +12,7 @@ class ProjectObserver
      */
     public function created(Project $project): void
     {
-        $this->recordActivity('updated', $project);
+        $this->recordActivity('created', $project);
     }
 
     /**
