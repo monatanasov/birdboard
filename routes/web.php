@@ -1,13 +1,4 @@
 <?php
-//Route::get('/dashboard', function () {
-//    return view('dashboard');
-//})->middleware(['auth', 'verified'])->name('dashboard');
-//
-//Route::middleware('auth')->group(function () {
-//    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-//    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-//    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-//});
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
@@ -21,10 +12,25 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectTasksController;
+use App\Models\Activity;
+use App\Models\Project;
 use Illuminate\Support\Facades\Route;
 
 use \App\Http\Controllers\ProjectsController;
 
+// Events - when a project is created.. That's way we can listen it
+Project::created(function ($project) {
+    Activity::create([
+        'project_id' => $project->id,
+        'description' => 'created'
+    ]);
+});
+Project::updated(function ($project) {
+    Activity::create([
+        'project_id' => $project->id,
+        'description' => 'updated'
+    ]);
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +42,7 @@ use \App\Http\Controllers\ProjectsController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 
 
 Route::middleware('guest')->group(function () {
