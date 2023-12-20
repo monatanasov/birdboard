@@ -18,19 +18,6 @@ use Illuminate\Support\Facades\Route;
 
 use \App\Http\Controllers\ProjectsController;
 
-// Events - when a project is created.. That's way we can listen it
-Project::created(function ($project) {
-    Activity::create([
-        'project_id' => $project->id,
-        'description' => 'created'
-    ]);
-});
-Project::updated(function ($project) {
-    Activity::create([
-        'project_id' => $project->id,
-        'description' => 'updated'
-    ]);
-});
 
 /*
 |--------------------------------------------------------------------------
