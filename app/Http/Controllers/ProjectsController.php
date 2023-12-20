@@ -33,11 +33,7 @@ class ProjectsController extends Controller
     public function store()
     {
         // validate
-        $attributes = request()->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'notes' => 'min:3'
-        ]);
+        $attributes = $this->validateRequest();
 
 
         // if auth user - assign owner id; else - redirect to login
@@ -48,13 +44,33 @@ class ProjectsController extends Controller
         return redirect($project->path());
     }
 
+    public function edit(Project $project)
+    {
+        return view('projects.edit', compact('project'));
+    }
+
     public function update(Project $project)
     {
         $this->authorize('update', $project);
 
-        $project->update(request(['notes']));
+        // validate
+        $attributes = $this->validateRequest();
+
+        $project->update($attributes);
 
         return redirect($project->path());
+    }
+
+    /**
+     * @return array
+     */
+    public function validateRequest(): array
+    {
+        return request()->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'notes' => 'min:3'
+        ]);
     }
 
 }
