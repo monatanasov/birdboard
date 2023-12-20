@@ -60,8 +60,6 @@ class ManageProjectsTest extends TestCase
 
     public function test_user_can_update_a_project()
     {
-        $this->withoutExceptionHandling();
-
         $project = ProjectFactory::create();
 
         $this->actingAs($project->owner)
@@ -72,6 +70,19 @@ class ManageProjectsTest extends TestCase
 
         $this->assertDatabaseHas('projects', $attributes);
     }
+
+//    public function test_user_can_update_a_projects_general_notes()
+//    {
+////        $this->withoutExceptionHandling();
+//        $project = ProjectFactory::create();
+//
+//        $this->actingAs($project->owner)
+//            ->get($project->path() . '/edit')->assertRedirect('login');
+//
+////        $this->get($project->path().'/edit')->assertOk();
+//
+////        $this->assertDatabaseHas('projects', $attributes);
+//    }
 
     /** @TEST */
     public function test_user_can_view_their_project()
