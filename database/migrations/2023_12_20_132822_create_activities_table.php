@@ -14,6 +14,11 @@ return new class extends Migration
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('project_id');
+            $table->nullableMorphs('subject');
+            // Morphs represents the code below. NullableMorphs make's them nullable.
+//            $table->unsignedBigInteger('subject_id'); //9
+//            $table->string('subject_type'); // App\Models\Task
+
             $table->string('description');
             $table->timestamps();
 
