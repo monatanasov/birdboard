@@ -21,6 +21,7 @@ class ProjectTasksController extends Controller
         return redirect($project->path());
     }
 
+
     public function update(Project $project, Task $task)
     {
         if (auth()->user()->isNot($task->project->owner)) {
@@ -29,10 +30,19 @@ class ProjectTasksController extends Controller
 
         request()->validate(['body' => 'required']);
 
-        $task->update([
-            'body' => request('body'),
-            'completed' => request()->has('completed')
-        ]);
+        $task->update(['body' => request('body')]);
+
+        if (request()->has('completed')) {
+            $task->complete();
+        }
+
+//        $task->update([
+//            'body' => request('body'),
+//            'completed' => request()->has('completed')
+//        ]);
+
+//        $task->complete();
+
 
         return redirect($project->path());
     }
