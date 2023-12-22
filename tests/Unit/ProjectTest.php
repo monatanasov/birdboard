@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 //use PHPUnit\Framework\TestCase;
 use Tests\TestCase;
@@ -25,13 +26,21 @@ class ProjectTest extends TestCase
         $this->assertInstanceOf('App\Models\User', $project->owner);
     }
 
+    function test_it_can_invite_a_user()
+    {
+        $project = Project::factory()->create();
+
+        $project->invite($user = User::factory()->create());
+
+        $this->assertTrue($project->members->contains($user));
+    }
+
     // TODO: fix this test!
 //    public function test_it_can_add_a_task()
 //    {
 //        $project = Project::factory()->create();
 //
 //        $task = $project->addTask('Test task');
-////        dd($task);
 //
 //        $this->assertCount(1, $project->tasks);
 //        $this->assertTrue($project->tasks->contains($task));
