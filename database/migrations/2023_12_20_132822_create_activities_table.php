@@ -11,15 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('activities', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('project_id');
-            $table->nullableMorphs('subject');
             // Morphs represents the code below. NullableMorphs make's them nullable.
 //            $table->unsignedBigInteger('subject_id'); //9
 //            $table->string('subject_type'); // App\Models\Task
 
+
+        Schema::create('activities', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('project_id');
+            $table->nullableMorphs('subject');
             $table->string('description');
+            $table->text('changes')->nullable();
             $table->timestamps();
 
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
