@@ -11,12 +11,11 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\ProjectTasksController;
 use App\Models\Activity;
 use App\Models\Project;
 use Illuminate\Support\Facades\Route;
-
-use \App\Http\Controllers\ProjectsController;
 
 
 /*
@@ -91,6 +90,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/projects/{project}', [ProjectsController::class, 'show']);
     Route::patch('/projects/{project}', [ProjectsController::class, 'update']);
     Route::post('/projects', [ProjectsController::class, 'store']);
+    Route::delete('/projects/{project}', [ProjectsController::class, 'destroy']);
 
 
     Route::post('/projects/{project}/tasks', [ProjectTasksController::class, 'store']);
